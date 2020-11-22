@@ -23,6 +23,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import cl.ubb.scrumitos.exceptions.ProductNotFoundException;
+import cl.ubb.scrumitos.model.Producto;
 import cl.ubb.scrumitos.service.ProductoService;
 
 @ExtendWith(MockitoExtension.class)
@@ -35,7 +36,7 @@ class ProductoControllerTest {
 	
 	@InjectMocks
 	private ProductoController productController;
-	
+	private JacksonTester<Producto> jsonProducto;
 	@BeforeEach
 	void setup() {
 		JacksonTester.initFields(this, new ObjectMapper());
@@ -80,5 +81,24 @@ class ProductoControllerTest {
 		assertThat(response.getStatus()).isEqualTo(HttpStatus.NOT_FOUND.value());
 		verify(productService, times(1)).eliminarProducto(3);
 	}
-	
+	/*
+	// Si se actualizan los datos exitosamente, entonces retorna status OK
+		@Test
+		void siHaceClickEnBotonParaModificarUnProductoYLosModificaEntoncesRetornaOK() throws Exception {
+			//given
+			Producto productoBuscado = new Producto(3, "Tierra Biologica Compost", "ANASAC", 
+					"Producto natural, hecho a partir de la compostación de residuos orgánicos", 4990, 20, "Activo");
+			
+			//when
+			MockHttpServletResponse response = mockMvc.perform(get("/productos/modificar/3")
+					.contentType(MediaType.APPLICATION_JSON)
+					.content(jsonProducto.write(productoBuscado).getJson()))
+					.andReturn().getResponse();
+			
+			//then
+			assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+			verify(productService, times(1)).modificarProducto(3, "Tierra Compost", "ARTHEMIS", 
+					"Producto natural, en base a compostación de residuos orgánicos", 5900, 25, "Activo");
+		}
+	*/
 }

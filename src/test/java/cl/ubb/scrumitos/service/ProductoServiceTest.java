@@ -11,7 +11,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import cl.ubb.scrumitos.exceptions.BlankDataException;
 import cl.ubb.scrumitos.exceptions.ProductNotFoundException;
+import cl.ubb.scrumitos.exceptions.WithoutChangesException;
 import cl.ubb.scrumitos.model.Producto;
 import cl.ubb.scrumitos.repository.ProductoRepository;
 
@@ -85,4 +87,59 @@ class ProductoServiceTest {
 		
 	}
 
+	// Modificar los datos del producto
+		//Caso Exitoso
+		@Test
+		void siDeseaModificarProductoYEsteEsEncontradoEntoncesLoModificaYGuardaLosCambios() 
+				throws ProductNotFoundException, WithoutChangesException, BlankDataException {
+			// Arrange
+			Producto productoBuscado = new Producto(3, "Tierra Biologica Compost", "ANASAC", 
+					"Producto natural, hecho a partir de la compostación de residuos orgánicos", 4990, 20, "Inactivo");
+			when(productRepo.findById(3)).thenReturn(productoBuscado);
+			
+			// Act
+			productService.modificarProducto(3, "Tierra Compost", "ARTHEMIS", 
+					"Producto natural, hecho en base a compostación de residuos orgánicos", 5990, 15, "Activo");
+			
+			//Assert
+			assertNotNull(productoBuscado);
+			assertEquals("Tierra Compost", productoBuscado.getNombre());
+			assertEquals("ARTHEMIS", productoBuscado.getMarca());
+			assertEquals("Producto natural, hecho en base a compostación de residuos orgánicos", 
+					productoBuscado.getDescripcion());
+			assertEquals(5990, productoBuscado.getPrecio());
+			assertEquals(15, productoBuscado.getStock());
+			assertEquals("Activo", productoBuscado.getEstado());
+			
+			verify(productRepo, times(1)).save(productoBuscado);
+		}
+
+		// Modificar los datos del producto
+		//Caso Sin Cambios
+		@Test
+		void siDeseaModificarProductoYEsteEsEncontradoEntoncesLoModificaSinCambiosYGuardaLosCambios() 
+				throws ProductNotFoundException, WithoutChangesException {
+			// Arrange
+			Producto productoBuscado = new Producto(3, "Tierra Biologica Compost", "ANASAC", 
+					"Producto natural, hecho a partir de la compostación de residuos orgánicos", 4990, 20, "Inactivo");
+			when(productRepo.findById(3)).thenReturn(productoBuscado);
+			
+			// Act + Assert
+			assertThrows(WithoutChangesException.class, ()-> productService.modificarProducto(3, "Tierra Biologica Compost", "ANASAC", 
+				"Producto natural, hecho a partir de la compostación de residuos orgánicos", 4990, 20, "Inactivo"));
+			}
+		
+		// Modificar los datos del producto
+		//Caso Con datos en blanco
+		@Test
+		void siDeseaModificarProductoYEsteEsEncontradoEntoncesLoModificaConDatosEnBlancoYGuardaLosCambios() 
+			throws ProductNotFoundException, WithoutChangesException, BlankDataException {
+			// Arrange
+			Producto productoBuscado = new Producto(3, "Tierra Biologica Compost", "ANASAC", 
+				"Producto natural, hecho a partir de la compostación de residuos orgánicos", 4990, 20, "Inactivo");
+			when(productRepo.findById(3)).thenReturn(productoBuscado);
+					
+			// Act + Assert
+			assertThrows(BlankDataException.class, ()-> productService.modificarProducto(3, "", "", "", 0, 0, ""));
+		}	
 }
