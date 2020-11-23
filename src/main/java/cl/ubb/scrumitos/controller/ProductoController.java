@@ -40,18 +40,7 @@ public class ProductoController {
 			return new ResponseEntity<Producto>(HttpStatus.OK);
 		}
 		
-	// Eliminación lógica de un producto
-	@GetMapping("eliminar/{codigo}")
-	public ResponseEntity<Producto> logicDelete(@PathVariable int codigo) {
-		try {
-			productoService.eliminarProducto(codigo);
-
-		} catch (ProductNotFoundException e) {
-			return new ResponseEntity<Producto>(HttpStatus.NOT_FOUND);
-		}
-
-		return new ResponseEntity<Producto>(HttpStatus.OK);
-	}
+		
 	
 
 }

@@ -43,12 +43,9 @@ class ProductoControllerTest {
 		mockMvc = MockMvcBuilders.standaloneSetup(productController).build();
 	}
 	private JacksonTester<Producto> jsonProducto;
+	
 	//AGREGAR NUEVO PRODUCTO
-	// Para agregar un producto se debe ver si todos los datos fueron ingresados
-	// correctamente y si es que no hay un producto con los mismos datos.
 	
-	
-
 	@Test
 	void alPresionarAgregarProductoEsteSeDebeIngresar() throws Exception {
 		// given
@@ -63,44 +60,5 @@ class ProductoControllerTest {
 	}
 	
 	
-	// ELIMINACIÓN LÓGICA DE UN PRODUCTO
-		// Para eliminar un producto, debe buscarlo, traerlo, cambiar atributo "Estado" de "Activo" a "Inactivo" y
-		// luego guardarlo (Servicio), controlador invoca método de eliminación y retorna status OK si la operación se realizó exitosamente,
-		// NOT FOUND de lo contrario.
-	
-	// Si la operación de eliminación lógica se realiza de forma exitosa, entonces se retorna un status OK 
-	
-	@Test
-	void alHacerClickEnBotonParaEliminarUnProductoEntoncesSeDebeCambiarSuEstadoDeActivoAInactivo() throws Exception {
-		// given
-		/*Producto productoBuscado = new Producto(3, "Tierra Biologica Compost", "ANASAC", 
-				"Producto natural, hecho a partir de la compostación de residuos orgánicos", 4990, 20, "Activo");*/
-		
-		
-		// when
-		MockHttpServletResponse response = mockMvc.perform(get("/productos/eliminar/3")
-				.accept(MediaType.APPLICATION_JSON))
-				.andReturn().getResponse();
-		
-		// then
-		assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
-		verify(productService, times(1)).eliminarProducto(3);
-	}
-	
-	// Si la operación falla, entoces se retorna un status NOT FOUND
-	@Test
-	void siHaceClickEnBotonParaEliminarUnProductoPeroEsteNoEsEncontradoEntoncesRetornaNotFoundStatus() throws Exception {
-		// given
-		doThrow(new ProductNotFoundException()).when(productService).eliminarProducto(3);
-		
-		// when
-		MockHttpServletResponse response = mockMvc.perform(get("/productos/eliminar/3")
-				.accept(MediaType.APPLICATION_JSON))
-				.andReturn().getResponse();
-		
-		// then 
-		assertThat(response.getStatus()).isEqualTo(HttpStatus.NOT_FOUND.value());
-		verify(productService, times(1)).eliminarProducto(3);
-	}
 	
 }
