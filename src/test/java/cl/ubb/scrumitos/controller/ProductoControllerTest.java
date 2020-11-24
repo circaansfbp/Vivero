@@ -36,13 +36,13 @@ class ProductoControllerTest {
 	
 	@InjectMocks
 	private ProductoController productController;
-	
+	private JacksonTester<Producto> jsonProducto;
 	@BeforeEach
 	void setup() {
 		JacksonTester.initFields(this, new ObjectMapper());
 		mockMvc = MockMvcBuilders.standaloneSetup(productController).build();
 	}
-	private JacksonTester<Producto> jsonProducto;
+	
 	
 	//AGREGAR NUEVO PRODUCTO
 	
@@ -58,7 +58,7 @@ class ProductoControllerTest {
 		assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
 		
 	}
-	
-	
-	
+
 }
+	
+
