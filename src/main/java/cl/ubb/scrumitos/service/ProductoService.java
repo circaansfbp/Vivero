@@ -25,7 +25,7 @@ public class ProductoService {
 		return productFound;
 	}
 
-	public void guardarProducto(Producto productoBuscado) {
+	public void guardarProducto(Producto productoBuscado) throws ProductNotFoundException {
 		productRepo.save(productoBuscado);
 		
 	}

@@ -4,7 +4,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -41,6 +41,21 @@ class ProductoControllerTest {
 	void setup() {
 		JacksonTester.initFields(this, new ObjectMapper());
 		mockMvc = MockMvcBuilders.standaloneSetup(productController).build();
+	}
+
+	//AGREGAR NUEVO PRODUCTO
+	
+	@Test
+	void alPresionarAgregarProductoEsteSeDebeIngresar() throws Exception {
+		// given
+		Producto producto = new Producto(1, "Arbol frutal", "Kilamapu", "Arbol de 30 centimetros", 500, 10,
+				"Activo");
+		// when
+		MockHttpServletResponse response = mockMvc.perform(post("/productos/agregar/"+producto)
+				.accept(MediaType.APPLICATION_JSON))
+				.andReturn().getResponse();
+		assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+
 	}
 	
 	// ELIMINACIÓN LÓGICA DE UN PRODUCTO
@@ -80,6 +95,7 @@ class ProductoControllerTest {
 		// then 
 		assertThat(response.getStatus()).isEqualTo(HttpStatus.NOT_FOUND.value());
 		verify(productService, times(1)).eliminarProducto(3);
+		
 	}
 	/*
 	// Si se actualizan los datos exitosamente, entonces retorna status OK
